@@ -29,12 +29,20 @@ namespace MazeProblem
 
             var maze = CreateMaze(definitionFile);
 
+            //var exitPositionAndOrientation = ShootLazerThroughMaze(maze);
+
+            //PrintResults(definitionFile.BoardSize, definitionFile.LazerEntryRoom, exitPositionAndOrientation);
         }
 
         private static DefinitionFile ReadDefinitionFile(string definitionFilePath)
         {
             var definitionFileContents = File.ReadAllLines(definitionFilePath);
 
+            if (!definitionFileContents.Any())
+            {
+                Console.WriteLine($"{definitionFilePath} is empty.");
+                Environment.Exit(0);
+            }
             // TODO: Check for valid file contents
 
             var definitionFile = new DefinitionFile
@@ -66,9 +74,9 @@ namespace MazeProblem
 
             AddMazeSquaresToMaze(ref maze);
 
-            // TODO: SetDoorValues();
+            // TODO: UpdateDoorValues();
 
-            // TODO: AddMirrorsToMazeSquares();
+            AddMirrorsToMaze(ref maze, definitionFile.MirrorPlacements);
 
             return maze;
         }
@@ -83,7 +91,7 @@ namespace MazeProblem
                     {
                         Position = new Position
                         {
-                            X = column, //TODO: Check that this is right
+                            X = column, //TODO: Check that this is right. Looks like it might be backwards because the bottom left square is 0, 0
                             Y = row
                         },
                         HasNorthDoor = true,
@@ -93,6 +101,11 @@ namespace MazeProblem
                     });
                 }
             }
+        }
+
+        private static void AddMirrorsToMaze(ref Maze maze, List<String> mirrorPlacements)
+        {
+            // TODO
         }
     }
 }

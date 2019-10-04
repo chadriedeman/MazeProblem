@@ -2,7 +2,7 @@
   "profiles": {
     "MazeProblem": {
       "commandName": "Project",
-      "commandLineArgs": "/c/Users/Chad/Desktop/MazeProblemTestFile.txt"
+      "commandLineArgs": "C:\\Users\\Chad\\Desktop\\MazeProblemTestFile.txt"
     }
   }
 }
