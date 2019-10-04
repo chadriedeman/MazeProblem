@@ -27,7 +27,7 @@ namespace MazeProblem
 
             var definitionFile = ReadDefinitionFile(definitionFilePath);
 
-
+            var maze = CreateMaze(definitionFile);
 
         }
 
@@ -54,16 +54,45 @@ namespace MazeProblem
 
         private static Maze CreateMaze(DefinitionFile definitionFile)
         {
-            var maze = new Maze();
+            var maze = new Maze
+            {
+                MazeSquares = new List<MazeSquare>()
+            };
 
             var mazeWidthAndHeight = definitionFile.BoardSize.Split(',');
 
             maze.Width = Int32.Parse(mazeWidthAndHeight[0]);
             maze.Height = Int32.Parse(mazeWidthAndHeight[1]);
 
-            // TODO
+            AddMazeSquaresToMaze(ref maze);
+
+            // TODO: SetDoorValues();
+
+            // TODO: AddMirrorsToMazeSquares();
 
             return maze;
+        }
+
+        private static void AddMazeSquaresToMaze(ref Maze maze)
+        {
+            for (int row = 0; row < maze.Height; row++)
+            {
+                for (int column = 0; column < maze.Width; column++)
+                {
+                    maze.MazeSquares.Add(new MazeSquare
+                    {
+                        Position = new Position
+                        {
+                            X = column, //TODO: Check that this is right
+                            Y = row
+                        },
+                        HasNorthDoor = true,
+                        HasSouthDoor = true,
+                        HasEastDoor = true,
+                        HasWestDoor = true
+                    });
+                }
+            }
         }
     }
 }
