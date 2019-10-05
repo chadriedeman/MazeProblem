@@ -66,16 +66,27 @@ namespace MazeProblem.Models
 
             UpdateDoorValues(ref maze);
 
-            AddMirrorsToMaze(ref maze, definitionFile.MirrorPlacements); // TODO: Comment out for testing of code now
+            // AddMirrorsToMaze(ref maze, definitionFile.MirrorPlacements); // TODO: Comment out for testing of code now
 
             return maze;
         }
 
         private void UpdateDoorValues(ref Maze maze)
         {
+            var topPosition = maze.Height - 1;
+            var rightPosition = maze.Width - 1;
 
-            // TODO: Set perimeter doors to true
+            var mazeSquaresWithSouthPerimDoor = maze.MazeSquares.Where((mazeSquare) => mazeSquare.Position.Y == 0).ToList();
+            mazeSquaresWithSouthPerimDoor.ForEach((mazeSquare) => mazeSquare.HasSouthPerimeterDoor = true);
 
+            var mazeSquaresWithNorthPerimDoor = maze.MazeSquares.Where((mazeSquare) => mazeSquare.Position.Y == topPosition).ToList();
+            mazeSquaresWithNorthPerimDoor.ForEach((mazeSquare) => mazeSquare.HasNorthPerimeterDoor = true);
+
+            var mazeSquaresWithWestPerimDoor = maze.MazeSquares.Where((mazeSquare) => mazeSquare.Position.X == 0).ToList();
+            mazeSquaresWithWestPerimDoor.ForEach((mazeSquare) => mazeSquare.HasWestPerimeterDoor = true);
+
+            var mazeSquaresWithEastPerimDoor = maze.MazeSquares.Where((mazeSquare) => mazeSquare.Position.X == rightPosition).ToList();
+            mazeSquaresWithEastPerimDoor.ForEach((mazeSquare) => mazeSquare.HasEastPerimeterDoor = true);
         }
 
         private void SetMazeWidthAndHeight(ref Maze maze, string boardSize)
@@ -197,9 +208,9 @@ namespace MazeProblem.Models
 
             var laserDirection = GetInitialLazerDirection(currentSquare, entryOrientation);
 
-            while (GetNextSquare(ref maze, currentSquare, ref laserDirection) != null)
+            while (GetNextSquare(maze, currentSquare, ref laserDirection) != null)
             {
-                currentSquare = GetNextSquare(ref maze, currentSquare, ref laserDirection);
+                currentSquare = GetNextSquare(maze, currentSquare, ref laserDirection);
                 var orientation = GetOrientation(laserDirection);
                 path.AddMazeSquareToPath(currentSquare, orientation);
             }
@@ -211,7 +222,7 @@ namespace MazeProblem.Models
             return string.Empty; // return path too? New data structure?
         }
 
-        private MazeSquare GetNextSquare(ref Maze maze, MazeSquare currentMazeSquare, ref LazerDirection lazerDirection)
+        private MazeSquare GetNextSquare(Maze maze, MazeSquare currentMazeSquare, ref LazerDirection lazerDirection)
         {
             if (!MazeSquareHasMirror(currentMazeSquare))
             {
@@ -230,17 +241,24 @@ namespace MazeProblem.Models
 
         private Position GetNextPositionWhenNoMirrors(MazeSquare currentMazeSquare, LazerDirection lazerDirection)
         {
+
+            var newPosY = currentMazeSquare.Position.Y + 1;
+            var newNegY = currentMazeSquare.Position.Y - 1;
+            var newPosX = currentMazeSquare.Position.X + 1;
+            var newNegX = currentMazeSquare.Position.X - 1;
+
+
             if (lazerDirection == LazerDirection.North)
-                return new Position { X = currentMazeSquare.Position.X, Y = currentMazeSquare.Position.Y++ };
+                return new Position { X = currentMazeSquare.Position.X, Y = newPosY };
 
             if (lazerDirection == LazerDirection.South)
-                return new Position { X = currentMazeSquare.Position.X, Y = currentMazeSquare.Position.Y-- };
+                return new Position { X = currentMazeSquare.Position.X, Y = newNegY };
 
             if (lazerDirection == LazerDirection.East)
-                return new Position { X = currentMazeSquare.Position.X++, Y = currentMazeSquare.Position.Y };
+                return new Position { X = newPosX, Y = currentMazeSquare.Position.Y };
 
             if (lazerDirection == LazerDirection.West)
-                return new Position { X = currentMazeSquare.Position.X--, Y = currentMazeSquare.Position.Y };
+                return new Position { X = newNegX, Y = currentMazeSquare.Position.Y };
 
             return null;
         }
