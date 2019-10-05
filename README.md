@@ -35,6 +35,7 @@ nonreflective side, it will pass through the room as if the mirror was not there
 ### The Definition File
 
 The input file will be an ASCII text file with the following format:
+
 The board size
 -1
 Mirror placements
@@ -54,6 +55,7 @@ The laser entry room is provided in X,Y coordinates followed by an H or V (H for
 Vertical) to indicated the laser orientation.
 
 A Sample Text File
+
 5,4
 -1
 1,2RR
@@ -76,7 +78,7 @@ The dimensions of the board
 The start position of the laser in the format (X, Y) and the orientation (H or V)
 The exit point of the laser in the format (X, Y) and the orientation (H or V)
 
-##Programming Languages
+## Programming Languages
 
 Write the code using an object-oriented language such as C#, C++, Python, Java, etc. Choose one you
 are most comfortable with.
