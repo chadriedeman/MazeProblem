@@ -66,7 +66,7 @@ namespace MazeProblem.Models
 
             UpdateDoorValues(ref maze);
 
-            // AddMirrorsToMaze(ref maze, definitionFile.MirrorPlacements); // TODO: Comment out for testing of code now
+            AddMirrorsToMaze(ref maze, definitionFile.MirrorPlacements);
 
             return maze;
         }
@@ -222,7 +222,7 @@ namespace MazeProblem.Models
         {
             if (!MazeSquareHasMirror(currentMazeSquare))
             {
-                var nextPosition = GetNextPositionWhenNoMirrors(currentMazeSquare, lazerDirection);
+                var nextPosition = GetNextPosition(currentMazeSquare, lazerDirection);
 
                 var nextSquare = maze.MazeSquares.FirstOrDefault((mazeSquare) => mazeSquare.Position.X == nextPosition.X && mazeSquare.Position.Y == nextPosition.Y);
 
@@ -231,15 +231,112 @@ namespace MazeProblem.Models
 
             else
             {
-                // Update lazer direction if need be
+                var nextPosition = GetNextPositionWhenMirrorPresent(currentMazeSquare, ref lazerDirection);
 
-                return null; // TODO
+                var nextSquare = maze.MazeSquares.FirstOrDefault((mazeSquare) => mazeSquare.Position.X == nextPosition.X && mazeSquare.Position.Y == nextPosition.Y);
+
+                return nextSquare != null ? nextSquare : null;
             }
         }
 
-        private Position GetNextPositionWhenNoMirrors(MazeSquare currentMazeSquare, LazerDirection lazerDirection)
+        private Position GetNextPositionWhenMirrorPresent(MazeSquare currentMazeSquare, ref LazerDirection lazerDirection)
         {
+            if (currentMazeSquare.Mirror.Type == MirrorType.OneSided)
+            {
+                return GetPositionWhenOnesidedMirror(currentMazeSquare, ref lazerDirection);
+            }
 
+            else if (currentMazeSquare.Mirror.Type == MirrorType.TwoSided)
+            {
+                return null; // TODO
+            }
+
+            else 
+                return null;
+        }
+
+        private Position GetPositionWhenOnesidedMirror(MazeSquare currentMazeSquare, ref LazerDirection lazerDirection)
+        {
+            if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Left && lazerDirection == LazerDirection.North || lazerDirection == LazerDirection.West)
+                return GetNextPosition(currentMazeSquare, lazerDirection);
+
+            if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Right && lazerDirection == LazerDirection.South || lazerDirection == LazerDirection.East)
+                return GetNextPosition(currentMazeSquare, lazerDirection);
+
+            if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Right && lazerDirection == LazerDirection.North || lazerDirection == LazerDirection.West)
+            {
+                ChangeLazerDirection(currentMazeSquare.Mirror.Direction, ref lazerDirection);
+                return GetNextPosition(currentMazeSquare, lazerDirection);
+            }
+
+            if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Left && lazerDirection == LazerDirection.South || lazerDirection == LazerDirection.East)
+            {
+                ChangeLazerDirection(currentMazeSquare.Mirror.Direction, ref lazerDirection);
+                return GetNextPosition(currentMazeSquare, lazerDirection);
+            }
+
+            return null;
+        }
+
+        private void ChangeLazerDirection(MirrorDirection mirrorDirection, ref LazerDirection lazerDirection)
+        {
+            if (mirrorDirection == MirrorDirection.Left)
+            {
+                if (lazerDirection == LazerDirection.North)
+                {
+                    lazerDirection = LazerDirection.West;
+                    return;
+                }
+
+                if (lazerDirection == LazerDirection.South)
+                {
+                    lazerDirection = LazerDirection.East;
+                    return;
+                }
+
+                if (lazerDirection == LazerDirection.East)
+                {
+                    lazerDirection = LazerDirection.South;
+                    return;
+                }
+
+                if (lazerDirection == LazerDirection.West)
+                {
+                    lazerDirection = LazerDirection.North;
+                    return;
+                }
+            }
+
+            if (mirrorDirection == MirrorDirection.Right)
+            {
+                if (lazerDirection == LazerDirection.North)
+                {
+                    lazerDirection = LazerDirection.East;
+                    return;
+                }
+
+                if (lazerDirection == LazerDirection.South)
+                {
+                    lazerDirection = LazerDirection.West;
+                    return;
+                }
+
+                if (lazerDirection == LazerDirection.East)
+                {
+                    lazerDirection = LazerDirection.North;
+                    return;
+                }
+
+                if (lazerDirection == LazerDirection.West)
+                {
+                    lazerDirection = LazerDirection.South;
+                    return;
+                }
+            }
+        }
+
+        private Position GetNextPosition(MazeSquare currentMazeSquare, LazerDirection lazerDirection)
+        {
             var newPosY = currentMazeSquare.Position.Y + 1;
             var newNegY = currentMazeSquare.Position.Y - 1;
             var newPosX = currentMazeSquare.Position.X + 1;
@@ -266,7 +363,8 @@ namespace MazeProblem.Models
             if (lazerDirection == LazerDirection.North || lazerDirection == LazerDirection.South)
                 return "V";
 
-            // TODO: Finish
+            if (lazerDirection == LazerDirection.West || lazerDirection == LazerDirection.East)
+                return "H";
 
             return string.Empty;
         }
