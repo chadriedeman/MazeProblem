@@ -90,7 +90,7 @@ namespace MazeProblem.Models
                     {
                         Position = new Position
                         {
-                            X = width, //TODO: Check that this is right. Looks like it might be backwards because the bottom left square is 0, 0
+                            X = width,
                             Y = height
                         },
                         HasNorthDoor = true,
@@ -104,12 +104,48 @@ namespace MazeProblem.Models
 
         private void AddMirrorsToMaze(ref Maze maze, List<String> mirrorPlacements)
         {
-            // TODO
+            if (!mirrorPlacements.Any())
+                return;
+
+            foreach(var mirrorPlacement in mirrorPlacements)
+            {
+                var xPositionAsString = mirrorPlacement.Split(',')[0];
+
+                var xPosition = Int32.Parse(xPositionAsString);
+                var yPosition = GetYPosition(mirrorPlacement);
+
+                // TODO: get direction
+                // TODO: get reflective side if one sided
+
+                var mirror = new Mirror
+                {
+                    // TODO: direction and type
+                };
+
+                var squareForMirror = maze.MazeSquares.FirstOrDefault((mazeSquare) => mazeSquare.Position.X == xPosition && mazeSquare.Position.Y == yPosition);
+
+                squareForMirror.Mirror = mirror;
+            }
         }
+
+        private int GetYPosition(string mirrorPlacement)
+        {
+            var startIndex = mirrorPlacement.IndexOf(',') + 1;
+
+            var yPosition = string.Empty;
+
+            for(int i = startIndex; (i < mirrorPlacement.Length) && (Char.ToUpper(mirrorPlacement[i]) != 'L' && Char.ToUpper(mirrorPlacement[i]) != 'R'); i++)
+            {
+                yPosition += mirrorPlacement[i];
+            }
+
+            return Int32.Parse(yPosition);
+        }
+
 
         private string SendLazerThroughMaze(Maze maze, string lazerEntryRoom)
         {
-            return null; // TODO
+            return string.Empty; // TODO
         }
     }
 }
