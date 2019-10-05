@@ -51,7 +51,8 @@ namespace MazeProblem.Models
             if (!fileContents.Any())
                 throw new ArgumentException($"{fileContents} is empty.");
 
-            // TODO: Finish
+            if (fileContents.Length < 5)
+                throw new ArgumentException($"{fileContents} does not have enough lines to be valid.");
         }
 
         private Maze CreateMaze(DefinitionFile definitionFile)
@@ -65,14 +66,14 @@ namespace MazeProblem.Models
 
             AddMazeSquaresToMaze(ref maze);
 
-            UpdateDoorValues(ref maze);
+            IdentifyPerimeterDoors(ref maze);
 
             AddMirrorsToMaze(ref maze, definitionFile.MirrorPlacements);
 
             return maze;
         }
 
-        private void UpdateDoorValues(ref Maze maze)
+        private void IdentifyPerimeterDoors(ref Maze maze)
         {
             var topPosition = maze.Height - 1;
             var rightPosition = maze.Width - 1;
@@ -231,20 +232,20 @@ namespace MazeProblem.Models
             if (!MazeSquareHasMirror(currentMazeSquare))
             {
                 var nextPosition = GetNextPosition(currentMazeSquare, lazerDirection);
-
-                var nextSquare = maze.MazeSquares.FirstOrDefault((mazeSquare) => mazeSquare.Position.X == nextPosition.X && mazeSquare.Position.Y == nextPosition.Y);
-
-                return nextSquare != null ? nextSquare : null;
+                return FindMazeSquareFromPosition(maze, nextPosition);
             }
-
             else
             {
                 var nextPosition = GetNextPositionWhenMirrorPresent(currentMazeSquare, ref lazerDirection);
-
-                var nextSquare = maze.MazeSquares.FirstOrDefault((mazeSquare) => mazeSquare.Position.X == nextPosition.X && mazeSquare.Position.Y == nextPosition.Y);
-
-                return nextSquare != null ? nextSquare : null;
+                return FindMazeSquareFromPosition(maze, nextPosition);
             }
+        }
+
+        private MazeSquare FindMazeSquareFromPosition(Maze maze, Position position)
+        {
+            var nextSquare = maze.MazeSquares.FirstOrDefault((mazeSquare) => mazeSquare.Position.X == position.X && mazeSquare.Position.Y == position.Y);
+
+            return nextSquare != null ? nextSquare : null;
         }
 
         private Position GetNextPositionWhenMirrorPresent(MazeSquare currentMazeSquare, ref LazerDirection lazerDirection)
