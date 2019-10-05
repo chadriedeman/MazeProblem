@@ -215,11 +215,7 @@ namespace MazeProblem.Models
                 path.AddMazeSquareToPath(currentSquare, orientation);
             }
 
-            // TODO
-
-
-
-            return string.Empty; // return path too? New data structure?
+            return $"{path.LazerPathStep.Last().Position.X},{path.LazerPathStep.Last().Position.Y}{path.LazerPathStep.Last().Orientation}"; // return path too? New data structure?
         }
 
         private MazeSquare GetNextSquare(Maze maze, MazeSquare currentMazeSquare, ref LazerDirection lazerDirection)
@@ -235,6 +231,8 @@ namespace MazeProblem.Models
 
             else
             {
+                // Update lazer direction if need be
+
                 return null; // TODO
             }
         }
