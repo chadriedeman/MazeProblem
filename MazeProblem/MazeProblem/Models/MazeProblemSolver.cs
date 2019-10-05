@@ -64,17 +64,17 @@ namespace MazeProblem.Models
 
             AddMazeSquaresToMaze(ref maze);
 
-            UpdateDoorValuesToBeforeLazerEntersMaze(ref maze);
+            UpdateDoorValues(ref maze);
 
             AddMirrorsToMaze(ref maze, definitionFile.MirrorPlacements);
 
             return maze;
         }
 
-        private void UpdateDoorValuesToBeforeLazerEntersMaze(ref Maze maze)
+        private void UpdateDoorValues(ref Maze maze)
         {
 
-            // TODO: Set outter perimeter doors to true
+            // TODO: Set perimeter doors to true
 
         }
 
@@ -189,15 +189,71 @@ namespace MazeProblem.Models
             var entryOrientation = lazerEntryRoom[lazerEntryRoom.Length - 1]
                 .ToString();
 
+            var path = new LazerPath();
 
+            var currentSquare = maze.MazeSquares.FirstOrDefault((mazeSquare) => mazeSquare.Position.X == entryCoordinates.X && mazeSquare.Position.Y == entryCoordinates.Y);
 
-            // Once lazer is in maze, update doors again
+            path.AddMazeSquareToPath(currentSquare, entryOrientation);
+
+            var laserDirection = GetInitialLazerDirection(currentSquare, entryOrientation);
+
+            while (GetNextSquare(ref maze, currentSquare, ref laserDirection) != null)
+            {
+                currentSquare = GetNextSquare(ref maze, currentSquare, ref laserDirection);
+                var orientation = GetOrientation(laserDirection);
+                path.AddMazeSquareToPath(currentSquare, orientation);
+            }
 
             // TODO
 
 
 
-            return string.Empty; 
+            return string.Empty; // return path too? New data structure?
+        }
+
+        private MazeSquare GetNextSquare(ref Maze maze, MazeSquare currentMazeSquare, ref LazerDirection lazerDirection)
+        {
+            if (!MazeSquareHasMirror(currentMazeSquare))
+            {
+                return null; // TODO
+            }
+
+            else
+            {
+                return null; // TODO
+            }
+        }
+
+        private string GetOrientation(LazerDirection lazerDirection)
+        {
+            if (lazerDirection == LazerDirection.North || lazerDirection == LazerDirection.South)
+                return "V";
+
+            // TODO: Finish
+
+            return string.Empty;
+        }
+
+        private LazerDirection GetInitialLazerDirection(MazeSquare mazeSquare, string orientation)
+        {
+            if (mazeSquare.HasNorthPerimeterDoor && orientation == "V")
+                return LazerDirection.South;
+
+            if (mazeSquare.HasSouthPerimeterDoor && orientation == "V")
+                return LazerDirection.North;
+
+            if (mazeSquare.HasWestPerimeterDoor && orientation == "H")
+                return LazerDirection.East;
+
+            if (mazeSquare.HasEastPerimeterDoor && orientation == "H")
+                return LazerDirection.West;
+
+            return LazerDirection.Unspecified;
+        }
+
+        private bool MazeSquareHasMirror(MazeSquare square)
+        {
+            return square.Mirror == null;
         }
 
         private Position GetLazerEntryCoordinates(string lazerEntryRoom)
