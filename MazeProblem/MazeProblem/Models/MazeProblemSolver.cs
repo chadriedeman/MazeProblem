@@ -64,11 +64,18 @@ namespace MazeProblem.Models
 
             AddMazeSquaresToMaze(ref maze);
 
-            // TODO: UpdateDoorValues();
+            UpdateDoorValuesToBeforeLazerEntersMaze(ref maze);
 
             AddMirrorsToMaze(ref maze, definitionFile.MirrorPlacements);
 
             return maze;
+        }
+
+        private void UpdateDoorValuesToBeforeLazerEntersMaze(ref Maze maze)
+        {
+
+            // TODO: Set outter perimeter doors to true
+
         }
 
         private void SetMazeWidthAndHeight(ref Maze maze, string boardSize)
@@ -91,11 +98,7 @@ namespace MazeProblem.Models
                         {
                             X = width,
                             Y = height
-                        },
-                        HasNorthDoor = true,
-                        HasSouthDoor = true,
-                        HasEastDoor = true,
-                        HasWestDoor = true
+                        }
                     });
                 }
             }
@@ -115,7 +118,7 @@ namespace MazeProblem.Models
 
                 var direction = GetMirrorDirection(mirrorPlacement, yPosition);
 
-                var reflectiveSide = GetReflectiveSide(mirrorPlacement);
+                var reflectiveSide = GetReflectiveSide(mirrorPlacement, yPosition);
 
                 var mirror = new Mirror
                 {
@@ -155,9 +158,28 @@ namespace MazeProblem.Models
             return direction == 'L' ? MirrorDirection.Left : MirrorDirection.Right;
         }
 
-        private MirrorReflectiveSide GetReflectiveSide(string mirrorPlacement)
+        private MirrorReflectiveSide GetReflectiveSide(string mirrorPlacement, int yPosition)
         {
-            return MirrorReflectiveSide.Unspecified; // TODO
+            var indexOfYPosition = mirrorPlacement.LastIndexOf(yPosition.ToString());
+
+            var mirrorDirectionAndReflectiveSide = mirrorPlacement.Substring(indexOfYPosition + yPosition.ToString().Length);
+
+            if (mirrorDirectionAndReflectiveSide.Length == 1)
+                return MirrorReflectiveSide.Both;
+            else
+            {
+                var reflectiveSide = mirrorDirectionAndReflectiveSide[1];
+
+                switch (reflectiveSide)
+                {
+                    case 'L':
+                        return MirrorReflectiveSide.Left;
+                    case 'R':
+                        return MirrorReflectiveSide.Right;
+                    default:
+                        return MirrorReflectiveSide.Unspecified;
+                }
+            }
         }
 
         private string SendLazerThroughMaze(Maze maze, string lazerEntryRoom)
@@ -169,7 +191,13 @@ namespace MazeProblem.Models
 
 
 
-            return string.Empty; // TODO
+            // Once lazer is in maze, update doors again
+
+            // TODO
+
+
+
+            return string.Empty; 
         }
 
         private Position GetLazerEntryCoordinates(string lazerEntryRoom)
