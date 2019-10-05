@@ -34,14 +34,14 @@ nonreflective side, it will pass through the room as if the mirror was not there
 
 ### The Definition File
 
-The input file will be an ASCII text file with the following format:
+The input file will be an ASCII text file with the following format:   
 
-The board size
--1
-Mirror placements
--1
-Laser entry room
--1
+The board size   
+-1   
+Mirror placements   
+-1   
+Laser entry room    
+-1    
 
 ### Description of each section of the definition file:
 
@@ -54,15 +54,14 @@ Side or L for Left Side) or nothing if both sides are reflective and it’s a 2-
 The laser entry room is provided in X,Y coordinates followed by an H or V (H for Horizontal or V for
 Vertical) to indicated the laser orientation.
 
-A Sample Text File
-
-5,4
--1
-1,2RR
-3,2L
--1
-1,0V
--1
+A Sample Text File   
+5,4   
+-1   
+1,2RR   
+3,2L   
+-1   
+1,0V   
+-1   
 
 Using the sample above, a laser starting at 1,0 would bounce off the mirror at 1,2 and 3,2 and exit the
 board at 3,0 vertically.
@@ -73,10 +72,11 @@ the board at 3,0 vertically.
 
 ## Output
 
-At a minimum, your application should print the following to the screen:
-The dimensions of the board
-The start position of the laser in the format (X, Y) and the orientation (H or V)
-The exit point of the laser in the format (X, Y) and the orientation (H or V)
+At a minimum, your application should print the following to the screen:   
+
+1. The dimensions of the board   
+2. The start position of the laser in the format (X, Y) and the orientation (H or V)   
+3. The exit point of the laser in the format (X, Y) and the orientation (H or V)   
 
 ## Programming Languages
 
