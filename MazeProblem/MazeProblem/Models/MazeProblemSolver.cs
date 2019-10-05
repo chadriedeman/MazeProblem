@@ -14,13 +14,14 @@ namespace MazeProblem.Models
 
             var maze = CreateMaze(definitionFile);
 
-            var exitPosition = SendLazerThroughMaze(maze, definitionFile.LazerEntryRoom);
+            var results = SendLazerThroughMaze(maze, definitionFile.LazerEntryRoom);
 
             return new MazeProblemResults
             {
                 BoardSize = definitionFile.BoardSize,
                 LazerEntryPositionAndOrientation = definitionFile.LazerEntryRoom,
-                ExitPostionAndOrientation = exitPosition
+                ExitPostionAndOrientation = results.ExitPostionAndOrientation,
+                LazerPath = results.LazerPath
             }; 
         }
 
@@ -193,7 +194,7 @@ namespace MazeProblem.Models
             }
         }
 
-        private string SendLazerThroughMaze(Maze maze, string lazerEntryRoom)
+        private MazeProblemResults SendLazerThroughMaze(Maze maze, string lazerEntryRoom)
         {
             var entryCoordinates = GetLazerEntryCoordinates(lazerEntryRoom);
 
@@ -208,14 +209,21 @@ namespace MazeProblem.Models
 
             var laserDirection = GetInitialLazerDirection(currentSquare, entryOrientation);
 
-            while (GetNextSquare(maze, currentSquare, ref laserDirection) != null)
+            do
             {
                 currentSquare = GetNextSquare(maze, currentSquare, ref laserDirection);
                 var orientation = GetOrientation(laserDirection);
-                path.AddMazeSquareToPath(currentSquare, orientation);
-            }
 
-            return $"{path.LazerPathStep.Last().Position.X},{path.LazerPathStep.Last().Position.Y}{path.LazerPathStep.Last().Orientation}"; // return path too? New data structure?
+                if (currentSquare != null)
+                    path.AddMazeSquareToPath(currentSquare, orientation);
+
+            } while (currentSquare != null);
+
+            return new MazeProblemResults
+            {
+                ExitPostionAndOrientation = $"{path.LazerPathStep.Last().Position.X},{path.LazerPathStep.Last().Position.Y}{path.LazerPathStep.Last().Orientation}",
+                LazerPath = path
+            };
         }
 
         private MazeSquare GetNextSquare(Maze maze, MazeSquare currentMazeSquare, ref LazerDirection lazerDirection)
@@ -248,7 +256,9 @@ namespace MazeProblem.Models
 
             else if (currentMazeSquare.Mirror.Type == MirrorType.TwoSided)
             {
-                return null; // TODO
+                ChangeLazerDirection(currentMazeSquare.Mirror.Direction, ref lazerDirection);
+
+                return GetNextPosition(currentMazeSquare, lazerDirection);
             }
 
             else 

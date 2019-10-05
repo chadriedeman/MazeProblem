@@ -38,6 +38,7 @@ namespace MazeProblem
             Console.WriteLine($"Board Size: {results.BoardSize}");
             Console.WriteLine($"Lazer Entry Point: {results.LazerEntryPositionAndOrientation}");
             Console.WriteLine($"Exit point: {results.ExitPostionAndOrientation}");
+            // TODO: Print Path
         }
     }
 }
