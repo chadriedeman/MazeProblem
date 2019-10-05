@@ -66,7 +66,7 @@ namespace MazeProblem.Models
 
             UpdateDoorValues(ref maze);
 
-            AddMirrorsToMaze(ref maze, definitionFile.MirrorPlacements);
+            AddMirrorsToMaze(ref maze, definitionFile.MirrorPlacements); // TODO: Comment out for testing of code now
 
             return maze;
         }
@@ -215,13 +215,34 @@ namespace MazeProblem.Models
         {
             if (!MazeSquareHasMirror(currentMazeSquare))
             {
-                return null; // TODO
+                var nextPosition = GetNextPositionWhenNoMirrors(currentMazeSquare, lazerDirection);
+
+                var nextSquare = maze.MazeSquares.FirstOrDefault((mazeSquare) => mazeSquare.Position.X == nextPosition.X && mazeSquare.Position.Y == nextPosition.Y);
+
+                return nextSquare != null ? nextSquare : null;
             }
 
             else
             {
                 return null; // TODO
             }
+        }
+
+        private Position GetNextPositionWhenNoMirrors(MazeSquare currentMazeSquare, LazerDirection lazerDirection)
+        {
+            if (lazerDirection == LazerDirection.North)
+                return new Position { X = currentMazeSquare.Position.X, Y = currentMazeSquare.Position.Y++ };
+
+            if (lazerDirection == LazerDirection.South)
+                return new Position { X = currentMazeSquare.Position.X, Y = currentMazeSquare.Position.Y-- };
+
+            if (lazerDirection == LazerDirection.East)
+                return new Position { X = currentMazeSquare.Position.X++, Y = currentMazeSquare.Position.Y };
+
+            if (lazerDirection == LazerDirection.West)
+                return new Position { X = currentMazeSquare.Position.X--, Y = currentMazeSquare.Position.Y };
+
+            return null;
         }
 
         private string GetOrientation(LazerDirection lazerDirection)
@@ -253,7 +274,7 @@ namespace MazeProblem.Models
 
         private bool MazeSquareHasMirror(MazeSquare square)
         {
-            return square.Mirror == null;
+            return square.Mirror != null;
         }
 
         private Position GetLazerEntryCoordinates(string lazerEntryRoom)
