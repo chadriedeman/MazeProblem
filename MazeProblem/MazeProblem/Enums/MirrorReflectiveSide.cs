@@ -1,9 +1,10 @@
 ﻿namespace MazeProblem.Enums
 {
-    public enum MirrorDirection
+    public enum MirrorReflectiveSide
     {
         Unspecified,
         Left,
-        Right
+        Right,
+        Both
     }
 }

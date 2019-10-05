@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MazeProblem.Enums;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -80,11 +81,9 @@ namespace MazeProblem.Models
 
         private void AddMazeSquaresToMaze(ref Maze maze)
         {
-            // Use 2D array instead? 
-
-            for (int height = maze.Height - 1; height >= 0; height--)
+            for (int height = 0; height < maze.Height; height++)
             {
-                for (int width = maze.Width - 1; width >= 0; width--)
+                for (int width = 0; width < maze.Width; width++)
                 {
                     maze.MazeSquares.Add(new MazeSquare
                     {
@@ -112,14 +111,17 @@ namespace MazeProblem.Models
                 var xPositionAsString = mirrorPlacement.Split(',')[0];
 
                 var xPosition = Int32.Parse(xPositionAsString);
-                var yPosition = GetYPosition(mirrorPlacement);
+                var yPosition = GetMirrorYPosition(mirrorPlacement);
 
-                // TODO: get direction
-                // TODO: get reflective side if one sided
+                var direction = GetMirrorDirection(mirrorPlacement, yPosition);
+
+                var reflectiveSide = GetReflectiveSide(mirrorPlacement);
 
                 var mirror = new Mirror
                 {
-                    // TODO: direction and type
+                    Direction = direction,
+                    Type = reflectiveSide == MirrorReflectiveSide.Both || reflectiveSide == MirrorReflectiveSide.Unspecified ? MirrorType.TwoSided : MirrorType.OneSided,
+                    ReflectiveSide = reflectiveSide
                 };
 
                 var squareForMirror = maze.MazeSquares.FirstOrDefault((mazeSquare) => mazeSquare.Position.X == xPosition && mazeSquare.Position.Y == yPosition);
@@ -128,7 +130,7 @@ namespace MazeProblem.Models
             }
         }
 
-        private int GetYPosition(string mirrorPlacement)
+        private int GetMirrorYPosition(string mirrorPlacement)
         {
             var startIndex = mirrorPlacement.IndexOf(',') + 1;
 
@@ -142,10 +144,60 @@ namespace MazeProblem.Models
             return Int32.Parse(yPosition);
         }
 
+        private MirrorDirection GetMirrorDirection(string mirrorPlacement, int yPosition)
+        {
+            var indexOfYPosition = mirrorPlacement.LastIndexOf(yPosition.ToString());
+
+            var mirrorDirectionAndReflectiveSide = mirrorPlacement.Substring(indexOfYPosition + yPosition.ToString().Length);
+
+            var direction = mirrorDirectionAndReflectiveSide[0];
+
+            return direction == 'L' ? MirrorDirection.Left : MirrorDirection.Right;
+        }
+
+        private MirrorReflectiveSide GetReflectiveSide(string mirrorPlacement)
+        {
+            return MirrorReflectiveSide.Unspecified; // TODO
+        }
 
         private string SendLazerThroughMaze(Maze maze, string lazerEntryRoom)
         {
+            var entryCoordinates = GetLazerEntryCoordinates(lazerEntryRoom);
+
+            var entryOrientation = lazerEntryRoom[lazerEntryRoom.Length - 1]
+                .ToString();
+
+
+
             return string.Empty; // TODO
+        }
+
+        private Position GetLazerEntryCoordinates(string lazerEntryRoom)
+        {
+            var xPositionAsString = lazerEntryRoom.Split(',')[0];
+
+            var xPosition = Int32.Parse(xPositionAsString);
+            var yPosition = GetLazerYPosition(lazerEntryRoom);
+
+            return new Position
+            {
+                X = xPosition,
+                Y = yPosition
+            };
+        }
+
+        private int GetLazerYPosition(string laserEntryRoom)
+        {
+            var startIndex = laserEntryRoom.IndexOf(',') + 1;
+
+            var yPosition = string.Empty;
+
+            for (int i = startIndex; (i < laserEntryRoom.Length) && (Char.ToUpper(laserEntryRoom[i]) != 'V' && Char.ToUpper(laserEntryRoom[i]) != 'H'); i++)
+            {
+                yPosition += laserEntryRoom[i];
+            }
+
+            return Int32.Parse(yPosition);
         }
     }
 }

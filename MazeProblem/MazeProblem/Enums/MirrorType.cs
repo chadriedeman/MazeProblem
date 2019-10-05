@@ -2,6 +2,7 @@
 {
     public enum MirrorType
     {
+        Unspecified,
         OneSided,
         TwoSided
     }
