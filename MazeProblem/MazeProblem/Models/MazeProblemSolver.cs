@@ -95,8 +95,8 @@ namespace MazeProblem.Models
         {
             var mazeWidthAndHeight = boardSize.Split(',');
 
-            maze.Width = Int32.Parse(mazeWidthAndHeight[0]);
-            maze.Height = Int32.Parse(mazeWidthAndHeight[1]);
+            maze.Width = int.Parse(mazeWidthAndHeight[0]);
+            maze.Height = int.Parse(mazeWidthAndHeight[1]);
         }
 
         private void AddMazeSquaresToMaze(ref Maze maze)
@@ -126,7 +126,7 @@ namespace MazeProblem.Models
             {
                 var xPositionAsString = mirrorPlacement.Split(',')[0];
 
-                var xPosition = Int32.Parse(xPositionAsString);
+                var xPosition = int.Parse(xPositionAsString);
                 var yPosition = GetMirrorYPosition(mirrorPlacement);
 
                 var direction = GetMirrorDirection(mirrorPlacement, yPosition);
@@ -152,12 +152,12 @@ namespace MazeProblem.Models
 
             var yPosition = string.Empty;
 
-            for(int i = startIndex; (i < mirrorPlacement.Length) && (Char.ToUpper(mirrorPlacement[i]) != 'L' && Char.ToUpper(mirrorPlacement[i]) != 'R'); i++)
+            for(int i = startIndex; (i < mirrorPlacement.Length) && (char.ToUpper(mirrorPlacement[i]) != 'L' && char.ToUpper(mirrorPlacement[i]) != 'R'); i++)
             {
                 yPosition += mirrorPlacement[i];
             }
 
-            return Int32.Parse(yPosition);
+            return int.Parse(yPosition);
         }
 
         private MirrorDirection GetMirrorDirection(string mirrorPlacement, int yPosition)
@@ -441,7 +441,7 @@ namespace MazeProblem.Models
         {
             var xPositionAsString = lazerEntryRoom.Split(',')[0];
 
-            var xPosition = Int32.Parse(xPositionAsString);
+            var xPosition = int.Parse(xPositionAsString);
             var yPosition = GetLazerYPosition(lazerEntryRoom);
 
             return new Position
@@ -457,12 +457,12 @@ namespace MazeProblem.Models
 
             var yPosition = string.Empty;
 
-            for (int i = startIndex; (i < laserEntryRoom.Length) && (Char.ToUpper(laserEntryRoom[i]) != 'V' && Char.ToUpper(laserEntryRoom[i]) != 'H'); i++)
+            for (int i = startIndex; (i < laserEntryRoom.Length) && (char.ToUpper(laserEntryRoom[i]) != 'V' && char.ToUpper(laserEntryRoom[i]) != 'H'); i++)
             {
                 yPosition += laserEntryRoom[i];
             }
 
-            return Int32.Parse(yPosition);
+            return int.Parse(yPosition);
         }
     }
 }
