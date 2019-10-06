@@ -268,6 +268,41 @@ namespace MazeProblem.Models
 
         private Position GetPositionWhenOnesidedMirror(MazeSquare currentMazeSquare, ref LazerDirection lazerDirection)
         {
+            if (currentMazeSquare.Mirror.Direction == MirrorDirection.Right)
+                return GetPositionForRightDirectionMirror(currentMazeSquare, ref lazerDirection);
+
+            else if (currentMazeSquare.Mirror.Direction == MirrorDirection.Left)
+                return GetPositionForLeftDirectionMirror(currentMazeSquare, ref lazerDirection);
+
+            else
+                return null;
+        }
+
+        private Position GetPositionForRightDirectionMirror(MazeSquare currentMazeSquare, ref LazerDirection lazerDirection)
+        {
+            if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Left && (lazerDirection == LazerDirection.North || lazerDirection == LazerDirection.West))
+                return GetNextPosition(currentMazeSquare, lazerDirection);
+
+            if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Right && (lazerDirection == LazerDirection.South || lazerDirection == LazerDirection.East))
+                return GetNextPosition(currentMazeSquare, lazerDirection);
+
+            if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Right && (lazerDirection == LazerDirection.North || lazerDirection == LazerDirection.West))
+            {
+                ChangeLazerDirection(currentMazeSquare.Mirror.Direction, ref lazerDirection);
+                return GetNextPosition(currentMazeSquare, lazerDirection);
+            }
+
+            if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Left && (lazerDirection == LazerDirection.South || lazerDirection == LazerDirection.East))
+            {
+                ChangeLazerDirection(currentMazeSquare.Mirror.Direction, ref lazerDirection);
+                return GetNextPosition(currentMazeSquare, lazerDirection);
+            }
+
+            return null;
+        }
+
+        private Position GetPositionForLeftDirectionMirror(MazeSquare currentMazeSquare, ref LazerDirection lazerDirection)
+        {
             if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Left && (lazerDirection == LazerDirection.South || lazerDirection == LazerDirection.West))
                 return GetNextPosition(currentMazeSquare, lazerDirection);
 
