@@ -268,19 +268,19 @@ namespace MazeProblem.Models
 
         private Position GetPositionWhenOnesidedMirror(MazeSquare currentMazeSquare, ref LazerDirection lazerDirection)
         {
-            if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Left && (lazerDirection == LazerDirection.North || lazerDirection == LazerDirection.West))
+            if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Left && (lazerDirection == LazerDirection.South || lazerDirection == LazerDirection.West))
                 return GetNextPosition(currentMazeSquare, lazerDirection);
 
-            if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Right && (lazerDirection == LazerDirection.South || lazerDirection == LazerDirection.East))
+            if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Right && (lazerDirection == LazerDirection.North || lazerDirection == LazerDirection.East))
                 return GetNextPosition(currentMazeSquare, lazerDirection);
 
-            if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Right && (lazerDirection == LazerDirection.North || lazerDirection == LazerDirection.West))
+            if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Right && (lazerDirection == LazerDirection.South || lazerDirection == LazerDirection.West))
             {
                 ChangeLazerDirection(currentMazeSquare.Mirror.Direction, ref lazerDirection);
                 return GetNextPosition(currentMazeSquare, lazerDirection);
             }
 
-            if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Left && (lazerDirection == LazerDirection.South || lazerDirection == LazerDirection.East))
+            if (currentMazeSquare.Mirror.ReflectiveSide == MirrorReflectiveSide.Left && (lazerDirection == LazerDirection.North || lazerDirection == LazerDirection.East))
             {
                 ChangeLazerDirection(currentMazeSquare.Mirror.Direction, ref lazerDirection);
                 return GetNextPosition(currentMazeSquare, lazerDirection);
