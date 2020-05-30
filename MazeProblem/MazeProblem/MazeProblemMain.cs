@@ -1,4 +1,5 @@
 ﻿using MazeProblem.Business;
+using MazeProblem.Business.Services;
 using System;
 using System.IO;
 using System.Linq;
@@ -19,7 +20,13 @@ namespace MazeProblem
                 if (!File.Exists(definitionFilePath))
                     throw new ArgumentException($"No file exists for {definitionFilePath}.");
 
-                var mazeProblemSolver = new MazeProblemSolver();
+                var mirrorService = new MirrorService();
+
+                var lazerService = new LazerService();
+
+                var mazeService = new MazeService(mirrorService);
+
+                var mazeProblemSolver = new MazeProblemSolver(mazeService, lazerService);
 
                 var results = mazeProblemSolver.SolveMazeProblem(definitionFilePath);
 
