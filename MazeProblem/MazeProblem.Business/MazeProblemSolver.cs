@@ -1,9 +1,6 @@
 ﻿using MazeProblem.Business.Services;
 using MazeProblem.Domain.Enums;
 using MazeProblem.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace MazeProblem.Business
@@ -13,15 +10,20 @@ namespace MazeProblem.Business
         private readonly IMazeService _mazeService;
         private readonly ILazerService _lazerService;
 
-        public MazeProblemSolver(IMazeService mazeService, ILazerService lazerService)
+        public MazeProblemSolver()
         {
-            _mazeService = mazeService;
-            _lazerService = lazerService;
+            var mirrorService = new MirrorService();
+
+            _mazeService = new MazeService(mirrorService);
+
+            _lazerService = new LazerService();
         }
 
         public Results SolveMazeProblem(string definitionFilePath)
         {
-            var definitionFile = ReadDefinitionFile(definitionFilePath);
+            var definitionFileReader = new DefinitionFileReader();
+
+            var definitionFile = definitionFileReader.ReadDefinitionFile(definitionFilePath);
 
             var maze = _mazeService.CreateMaze(definitionFile);
 
@@ -36,36 +38,6 @@ namespace MazeProblem.Business
             }; 
         }
 
-        private DefinitionFile ReadDefinitionFile(string definitionFilePath)
-        {
-            var definitionFileContents = File.ReadAllLines(definitionFilePath);
-
-            CheckForValidFileContents(definitionFileContents);
-
-            var definitionFile = new DefinitionFile
-            {
-                BoardSize = definitionFileContents[0].Trim(),
-                MirrorPlacements = new List<string>(),
-                LazerEntryRoom = definitionFileContents[definitionFileContents.Length - 2].Trim()
-            };
-
-            for (int i = 2; i < definitionFileContents.Length - 3; i++)
-            {
-                definitionFile.MirrorPlacements.Add(definitionFileContents[i].Trim());
-            }
-
-            return definitionFile;
-        }
-
-        private void CheckForValidFileContents(string[] fileContents)
-        {
-            if (!fileContents.Any())
-                throw new ArgumentException($"{fileContents} is empty.");
-
-            if (fileContents.Length < 5)
-                throw new ArgumentException($"{fileContents} does not have enough lines to be valid.");
-        }
-
         private Results SendLazerThroughMaze(Maze maze, string lazerEntryRoom)
         {
             var entryCoordinates = GetLazerEntryCoordinates(lazerEntryRoom);
@@ -75,7 +47,8 @@ namespace MazeProblem.Business
 
             var path = new LazerPath();
 
-            var currentSquare = maze.MazeSquares.FirstOrDefault((mazeSquare) => mazeSquare.Position.X == entryCoordinates.X && mazeSquare.Position.Y == entryCoordinates.Y);
+            var currentSquare = maze.MazeSquares
+                .FirstOrDefault((mazeSquare) => mazeSquare.Position.X == entryCoordinates.X && mazeSquare.Position.Y == entryCoordinates.Y);
 
             path.AddMazeSquareToPath(currentSquare, entryOrientation);
 
