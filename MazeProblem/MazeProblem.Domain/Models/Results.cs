@@ -1,6 +1,6 @@
 ﻿namespace MazeProblem.Domain.Models
 {
-    public class MazeProblemResults
+    public class Results
     {
         public string BoardSize { get; set; }
         public string LazerEntryPositionAndOrientation { get; set; }

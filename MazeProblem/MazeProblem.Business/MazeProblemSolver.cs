@@ -9,7 +9,7 @@ namespace MazeProblem.Business
 {
     public class MazeProblemSolver
     {
-        public MazeProblemResults SolveMazeProblem(string definitionFilePath)
+        public Results SolveMazeProblem(string definitionFilePath)
         {
             var definitionFile = ReadDefinitionFile(definitionFilePath);
 
@@ -17,7 +17,7 @@ namespace MazeProblem.Business
 
             var results = SendLazerThroughMaze(maze, definitionFile.LazerEntryRoom);
 
-            return new MazeProblemResults
+            return new Results
             {
                 BoardSize = definitionFile.BoardSize,
                 LazerEntryPositionAndOrientation = definitionFile.LazerEntryRoom,
@@ -196,7 +196,7 @@ namespace MazeProblem.Business
             }
         }
 
-        private MazeProblemResults SendLazerThroughMaze(Maze maze, string lazerEntryRoom)
+        private Results SendLazerThroughMaze(Maze maze, string lazerEntryRoom)
         {
             var entryCoordinates = GetLazerEntryCoordinates(lazerEntryRoom);
 
@@ -221,7 +221,7 @@ namespace MazeProblem.Business
 
             } while (currentSquare != null);
 
-            return new MazeProblemResults
+            return new Results
             {
                 ExitPostionAndOrientation = $"{path.LazerPathStep.Last().Position.X},{path.LazerPathStep.Last().Position.Y}{path.LazerPathStep.Last().Orientation}",
                 LazerPath = path

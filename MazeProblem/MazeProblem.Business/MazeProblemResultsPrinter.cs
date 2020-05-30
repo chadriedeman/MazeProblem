@@ -5,7 +5,7 @@ namespace MazeProblem.Business
 {
     public class MazeProblemResultsPrinter
     {
-        public static void PrintResults(MazeProblemResults results)
+        public static void PrintResults(Results results)
         {
             if (results == null)
                 throw new ArgumentException("No results given to PrintResults");
