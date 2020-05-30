@@ -1,4 +1,4 @@
-﻿using MazeProblem.Models;
+﻿using MazeProblem.Business;
 using System;
 using System.IO;
 using System.Linq;
@@ -23,7 +23,7 @@ namespace MazeProblem
 
                 var results = mazeProblemSolver.SolveMazeProblem(definitionFilePath);
 
-                PrintResults(results);
+                MazeProblemResultsPrinter.PrintResults(results);
             } 
 
             catch (Exception ex)
@@ -31,16 +31,6 @@ namespace MazeProblem
                 Console.WriteLine($"An error occurred: {ex.Message}");
                 Environment.Exit(0);
             }
-        }
-
-        private static void PrintResults(MazeProblemResults results)
-        {
-            Console.WriteLine($"Board Size: {results.BoardSize}");
-            Console.WriteLine($"Lazer Entry Point: {results.LazerEntryPositionAndOrientation}");
-            Console.WriteLine($"Exit point: {results.ExitPostionAndOrientation}");
-
-            Console.WriteLine("Lazer Path: ");
-            results.LazerPath.LazerPathStep.ForEach((step) => Console.WriteLine($"    {step.Position.X},{step.Position.Y}{step.Orientation}"));
         }
     }
 }

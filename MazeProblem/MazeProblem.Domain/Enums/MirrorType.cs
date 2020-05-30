@@ -1,4 +1,4 @@
-﻿namespace MazeProblem.Enums
+﻿namespace MazeProblem.Domain.Enums
 {
     public enum MirrorType
     {

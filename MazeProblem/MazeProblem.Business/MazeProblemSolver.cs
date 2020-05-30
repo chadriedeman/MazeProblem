@@ -1,10 +1,11 @@
-﻿using MazeProblem.Enums;
+﻿using MazeProblem.Domain.Enums;
+using MazeProblem.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace MazeProblem.Models
+namespace MazeProblem.Business
 {
     public class MazeProblemSolver
     {
